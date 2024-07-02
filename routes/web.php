@@ -24,12 +24,14 @@ require __DIR__ . '/auth.php';
 
 Route::middleware('auth')->group(function () {
     Route::get('/announcements/create', [AnnouncementController::class, 'create'])->name('announcements.create');
-    Route::post('/announcements', [AnnouncementController::class, 'store'])->name('announcements.store');
+    Route::post('/announcements', [AnnouncementController::class, 'storeAnnouncement'])->name('announcements.store');
     Route::get('/announcements', [AnnouncementController::class, 'index'])->name('announcements.index');
     Route::post('/announcements/accept/{id}', [AnnouncementController::class, 'accept'])->name('announcements.accept');
 
     Route::get('/coverage-zone/create', [CoverageZoneController::class, 'create'])->name('coverage_zone.create');
     Route::post('/coverage-zone', [CoverageZoneController::class, 'store'])->name('coverage_zone.store');
+    //'coverage_zone.destroy
+    Route::delete('/coverage-zone/{id}', [CoverageZoneController::class, 'destroy'])->name('coverage_zone.destroy');
 
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 });

@@ -44,4 +44,8 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function coverageZone()
+    {
+        return $this->hasMany(CoverageZone::class);
+    }
 }

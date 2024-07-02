@@ -1,26 +1,67 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Définir la Zone de Couverture</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+    <style>
+        #map {
+            height: 500px;
+        }
+    </style>
 </head>
 
 <body>
     <div class="container mt-5">
         <h1>Définir la Zone de Couverture</h1>
-        <div id="map" style="height: 500px;"></div>
+
+        @if (session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+        @endif
+
+        <div id="map"></div>
+
         <form action="{{ route('coverage_zone.store') }}" method="POST">
             @csrf
-            <input type="hidden" id="zone_coordinates" name="zone_coordinates">
+            <input type="text" id="zone_coordinates" name="zone_coordinates">
             <button type="submit" class="btn btn-primary mt-3">Enregistrer la Zone</button>
         </form>
     </div>
+
+    <div>
+        <table class="table mt-5">
+            <thead>
+                <tr>
+                    <th>Zone de Couverture</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($zones as $zone)
+                <tr>
+                    <td>
+                        {{ $zone->vertices }}
+                    </td>
+                    <td>
+                        <form action="{{ route('coverage_zone.destroy', $zone->id) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger">Supprimer</button>
+                        </form>
+
+                </tr>
+                @endforeach
+            </tbody>
+    </div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+
+
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var map = L.map('map').setView([0, 0], 2);

@@ -2,10 +2,11 @@
 
 namespace App\Notifications;
 
+use App\Models\Announcement;
 use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Notification;
 
 class RescuerNotification extends Notification
 {
@@ -14,10 +15,13 @@ class RescuerNotification extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct()
+    protected $announcement;
+
+    public function __construct(Announcement $announcement)
     {
-        //
+        $this->announcement = $announcement;
     }
+
 
     /**
      * Get the notification's delivery channels.
@@ -36,9 +40,10 @@ class RescuerNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->line('Une nouvelle annonce a été créée.')
-            ->action('Voir l\'annonce', url('/announcements'))
-            ->line('Merci d\'utiliser notre application!');
+            ->subject('New Announcement in Your Coverage Zone')
+            ->line('A new announcement has been created within your coverage zone.')
+            ->action('View Announcement', route('announcements.show', $this->announcement->id))
+            ->line('Thank you for using our application!');
     }
 
 

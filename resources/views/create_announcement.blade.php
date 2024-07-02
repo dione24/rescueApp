@@ -41,7 +41,8 @@
             </div>
             <button type="submit" class="btn btn-primary">Créer</button>
         </form>
-        </d iv>
+
+    </div>
 </body>
 
 </html>
