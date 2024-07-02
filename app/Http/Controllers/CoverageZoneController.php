@@ -26,11 +26,22 @@ class CoverageZoneController extends Controller
         // Validation du polygone (à implémenter)
 
         $polygon = new Polygon();
-        $polygon->name = "Zone de couverture";
+        $polygon->name  = $request->name;
         $polygon->vertices = json_encode($coordinates);
         $polygon->user_id = auth()->id();
         $polygon->save();
 
         return redirect()->back()->with('success', 'Zone de couverture enregistrée avec succès !');
+    }
+
+    public function destroy($id)
+    {
+        $zone = Polygon::find($id);
+        if ($zone->user_id == auth()->id()) {
+            $zone->delete();
+            return redirect()->back()->with('success', 'Zone de couverture supprimée avec succès !');
+        } else {
+            return redirect()->back()->with('error', 'Vous n\'êtes pas autorisé à supprimer cette zone de couverture !');
+        }
     }
 }
