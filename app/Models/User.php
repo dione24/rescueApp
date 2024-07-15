@@ -44,8 +44,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-    public function coverageZone()
+
+    public function zones()
     {
-        return $this->hasMany(CoverageZone::class);
+        return $this->hasMany(Polygon::class);
     }
 }

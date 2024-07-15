@@ -40,5 +40,5 @@ Route::middleware('auth')->group(function () {
     Route::get('/users/index', [AdminController::class, 'index'])->name('users.index');
     Route::get('/coverage/index', [CoverageZoneController::class, 'index'])->name('coverage.index');
 
-    Route::get('/client/home', [ClientController::class, 'home'])->name('client.home');
+    Route::get('/client/home', [AnnouncementController::class, 'home'])->name('client.home');
 });

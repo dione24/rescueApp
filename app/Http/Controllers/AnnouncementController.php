@@ -7,20 +7,12 @@ use App\Models\Polygon;
 use App\Models\Announcement;
 use Illuminate\Http\Request;
 use InvalidArgumentException;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
-use App\Notifications\RescuerNotification;
-use Illuminate\Support\Facades\Notification;
+use App\Jobs\SendNewAnnouncementEmailJob;
 
 class AnnouncementController extends Controller
 {
-    public function create()
-    {
-        $rescuersInZone = session('rescuersInZone', []);
-
-        return view('create_announcement', compact('rescuersInZone'));
-    }
-
     public function storeAnnouncement(Request $request)
     {
         $request->validate([
@@ -34,12 +26,6 @@ class AnnouncementController extends Controller
         // Récupérez les polygones de votre base de données
         $polygons = Polygon::all();
 
-        // Vérifiez si le point est à l'intérieur d'au moins un polygone
-        if (!$this->isInsideAnyPolygon($point, $polygons)) {
-            return response()->json(['error' => 'La localisation est en dehors des zones de couverture autorisées.'], 422);
-        }
-
-
         // Si le point est valide, créez l'annonce
         $announcement = Announcement::create([
             'user_id' => auth()->id(),
@@ -48,21 +34,29 @@ class AnnouncementController extends Controller
             'longitude' => $request->longitude,
         ]);
 
+        // Retrieve all users from the database
+        $users = User::all();
 
+        // Filter the users based on their location using the isInsideAnyPolygon method
+        $usersInPolygon = $users->filter(function ($user) use ($point, $polygons) {
+            $userPoint = ['longitude' => $user->longitude, 'latitude' => $user->latitude];
+            return $this->isInsideAnyPolygon($userPoint, $polygons);
+        });
 
+        // Send an email notification to each user in the $usersInPolygon collection
+        foreach ($usersInPolygon as $user) {
+            SendNewAnnouncementEmailJob::dispatch($user);
+        }
         return response()->json(['success' => 'Annonce créée avec succès. Vous serez notifié dès qu\'un secouriste accepte votre annonce.']);
     }
 
     private function isInsideAnyPolygon($point, $polygons)
     {
         foreach ($polygons as $polygon) {
-            $vertices = json_decode($polygon->vertices, true); // Decode the JSON string into an array
+            $vertices = json_decode($polygon->vertices, true);
 
-            // Ensure vertices is an array and not null
             if (is_array($vertices) && isset($vertices[0]) && $this->isInsidePolygon($point, $vertices[0])) {
                 return true;
-            } else {
-                Log::error('Invalid polygon vertices', ['vertices' => $vertices]);
             }
         }
 
