@@ -8,6 +8,11 @@ use Illuminate\Http\Request;
 
 class CoverageZoneController extends Controller
 {
+    public function index()
+    {
+        $zones = Polygon::all();
+        return view('coverage', compact('zones'));
+    }
     public function create()
     {
         $zones = Polygon::where('user_id', auth()->id())->get();

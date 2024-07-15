@@ -20,8 +20,7 @@
 
         <h2>Annonces</h2>
         <ul>
-            @foreach ($announcements as $announcement)
-            <li>
+            @foreach ($announcements as $announcement) <li>
                 Annonce #{{ $announcement->id }}: {{ $announcement->description }}
                 @if($announcement->status == 'accepted')
                 <span class="badge bg-success">Acceptée</span>
