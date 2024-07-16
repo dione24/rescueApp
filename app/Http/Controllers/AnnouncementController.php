@@ -13,6 +13,20 @@ use App\Jobs\SendNewAnnouncementEmailJob;
 
 class AnnouncementController extends Controller
 {
+    public function index()
+    {
+        $announcements = Announcement::where('user_id', auth()->id())->get();
+
+        return view('client.home', compact('announcements'));
+    }
+
+    public function create()
+    {
+        return view('client.add');
+    }
+
+
+
     public function storeAnnouncement(Request $request)
     {
         $request->validate([
@@ -47,7 +61,7 @@ class AnnouncementController extends Controller
         foreach ($usersInPolygon as $user) {
             SendNewAnnouncementEmailJob::dispatch($user);
         }
-        return response()->json(['success' => 'Annonce créée avec succès. Vous serez notifié dès qu\'un secouriste accepte votre annonce.']);
+        return redirect()->route('client.home')->with(['success' => 'Annonce créée avec succès. Vous serez notifié dès qu\'un secouriste accepte votre annonce.']);
     }
 
     private function isInsideAnyPolygon($point, $polygons)
@@ -88,21 +102,21 @@ class AnnouncementController extends Controller
         return $inside;
     }
 
-    public function index()
-    {
-        $announcements = Announcement::where('status', 'pending')->get();
-        return view('view_announcements', compact('announcements'));
-    }
-
     public function accept($id)
     {
         $announcement = Announcement::findOrFail($id);
         $announcement->status = 'accepted';
         $announcement->save();
 
-        // Envoyer une notification à l'admin
-        // ...
+        //send email to user
 
-        return redirect()->route('announcements.index')->with('success', 'Annonce acceptée avec succès.');
+        return redirect()->back()->with('success', 'Annonce acceptée avec succès.');
+    }
+    public function destroy($id)
+    {
+        $announcement = Announcement::findOrFail($id);
+        $announcement->delete();
+
+        return redirect()->back()->with('success', 'Annonce supprimée avec succès.');
     }
 }

@@ -1,62 +1,5 @@
 @extends('layouts.app')
 @section('content')
-<section class="content">
-    <div class="container-fluid">
-        <!-- Small boxes (Stat box) -->
-        <div class="row">
-            <div class="col-lg-4 col-6">
-                <!-- small box -->
-                <div class="small-box bg-info">
-                    <div class="inner">
-                        <h3>150</h3>
-                        <p>
-                            Nouvelle Annonces
-                        </p>
-                    </div>
-                    <div class="icon">
-                        <i class="ion ion-bag"></i>
-                    </div>
-                </div>
-            </div>
-            <!-- ./col -->
-            <div class="col-lg-4 col-6">
-                <!-- small box -->
-                <div class="small-box bg-success">
-                    <div class="inner">
-                        <h3>53<sup style="font-size: 20px">%</sup></h3>
-                        <p>
-                            Pending
-                        </p>
-                    </div>
-                    <div class="icon">
-                        <i class="ion ion-stats-bars"></i>
-                    </div>
-                </div>
-            </div>
-            <!-- ./col -->
-
-            <!-- ./col -->
-            <div class="col-lg-4 col-6">
-                <!-- small box -->
-                <div class="small-box bg-danger">
-                    <div class="inner">
-                        <h3>65</h3>
-
-                        <p>Unique Visitors</p>
-                    </div>
-                    <div class="icon">
-                        <i class="ion ion-pie-graph"></i>
-                    </div>
-                </div>
-            </div>
-            <!-- ./col -->
-        </div>
-        <!-- /.row -->
-        <!-- Main row -->
-
-        <!-- /.row (main row) -->
-    </div><!-- /.container-fluid -->
-</section>
 
 <section class="content">
     <div class="container-fluid">
@@ -66,7 +9,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">
-                            Liste des Annonces
+                            Liste des Zones
                         </h3>
 
                         <div class="card-tools">
@@ -88,8 +31,8 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
+                                    <th>Name</th>
                                     <th>User</th>
-                                    <th>Date</th>
                                     <th>
                                         Action
                                     </th>
@@ -97,18 +40,24 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($announcements as $announcement)
+                                @foreach ($zones as $zone)
                                 <tr>
                                     <td>
-                                        {{$announcement->id}}
+                                        {{$zone->id}}
                                     </td>
                                     <td>
-                                        {{$announcement->user->name}}
+                                        {{$zone->name}}
                                     </td>
                                     <td>
-                                        {{$announcement->created_at}}
+                                        {{$zone->user->name}}
                                     </td>
                                     <td>
+
+                                        <form action="{{route('coverage_zone.destroy',$zone->id)}}" method="post">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </form>
 
                                     </td>
 
@@ -122,6 +71,5 @@
         </div>
     </div><!-- /.container-fluid -->
 </section>
-
 
 @endsection

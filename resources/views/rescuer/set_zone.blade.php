@@ -16,6 +16,9 @@
 <body>
     <div class="container mt-5">
         <h1 class="text-center mb-4">Définir la Zone de Couverture</h1>
+        <a href="{{ route('rescuer.home') }}" class="btn btn-primary mb-4">
+            <i class="fas fa-arrow-left"></i> Retour à l'accueil
+        </a>
 
         @if (session('success'))
         <div class="alert alert-success">

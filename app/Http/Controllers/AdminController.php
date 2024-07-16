@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Announcement;
 use App\Models\CoverageZone;
+use App\Models\Polygon;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -12,15 +13,24 @@ class AdminController extends Controller
 
     public function index()
     {
+
         $users = User::all();
         $announcements = Announcement::all();
-        return view('users', compact('users', 'announcements'));
+        $annoncesAttente = Announcement::where('status', 'pending')->count();
+        $annoncesAccepte = Announcement::where('status', 'accepted')->count();
+        $rescuers = User::where('role', 'rescuer')->count();
+        return view('admin.home', compact('users', 'announcements', 'annoncesAttente', 'annoncesAccepte', 'rescuers'));
+    }
+    public function users()
+    {
+        $users = User::all();
+        $announcements = Announcement::all();
+        return view('admin.users', compact('users', 'announcements'));
     }
 
-    public function coverage()
+    public function zones()
     {
-        $coverage = CoverageZone::all();
-        dd($coverage);
-        return view('coverage', compact('coverage'));
+        $zones = Polygon::all();
+        return view('admin.zones', compact('zones'));
     }
 }

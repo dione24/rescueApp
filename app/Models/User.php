@@ -49,4 +49,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(Polygon::class);
     }
+    public function polygons()
+    {
+        return $this->hasMany(Polygon::class);
+    }
 }

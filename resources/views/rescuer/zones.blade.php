@@ -1,10 +1,15 @@
 @extends('layouts.rescuer')
 @section('content')
+
 <br>
+
 <div class="row">
     <div class="col-12">
         <div class="card">
             <div class="card-header">
+                <h3 class="card-title">
+                    Mes Zones
+                </h3>
 
                 <div class="card-tools">
                     <div class="input-group input-group-sm" style="width: 150px;">
@@ -22,29 +27,38 @@
             <div class="card-body table-responsive p-0">
                 <table class="table table-hover text-nowrap">
                     <thead>
-                        <th>Description</th>
-                        <th>User</th>
-                        <th>Date</th>
-                        <th>
-                            Location
-                        </th>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>User</th>
+                            <th>
+                                Action
+                            </th>
+
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($zonesAnnounces as $announcement)
+                        @foreach ($zones as $zone)
                         <tr>
-                            <td>{{ $announcement->description }}</td>
                             <td>
-                                {{ $announcement->user->name }}
+                                {{$zone->id}}
                             </td>
-                            <td>{{ $announcement->created_at }}</td>
                             <td>
-                                <form action="{{ route('rescuer.announcements.accept', $announcement->id) }}"
-                                    method="POST">
+                                {{$zone->name}}
+                            </td>
+                            <td>
+                                {{$zone->user->name}}
+                            </td>
+                            <td>
+
+                                <form action="{{route('coverage_zone.destroy',$zone->id)}}" method="post">
                                     @csrf
-                                    <button type="submit" class="btn btn-success">J'accepte</button>
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger">Delete</button>
                                 </form>
+
                             </td>
+
                         </tr>
                         @endforeach
                     </tbody>

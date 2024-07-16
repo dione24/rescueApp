@@ -3,25 +3,27 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Polygon;
 use App\Models\Announcement;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Services\PolygonService;
 
 class DashboardController extends Controller
 {
-    public function home()
-    {
-        $users = User::all();
+    protected $polygonService;
 
-        if (Auth::user()->role == 'admin') {
-            $announcements = Announcement::all();
-            return view('home', compact('users', 'announcements'));
-        } elseif (Auth::user()->role == 'client') {
-            $announcements = Announcement::where('user_id', Auth::user()->id)->get();
-            return view('client.home', compact('users', 'announcements'));
-        } elseif (Auth::user()->role == 'rescuer') {
-            return view('rescuer.home', compact('users', 'announcements'));
-        }
+    public function __construct(PolygonService $polygonService)
+    {
+        $this->polygonService = $polygonService;
+    }
+
+    public function index()
+    {
+
+        $users = User::all();
+        $announcements = Announcement::all();
+        return view('home', compact('users', 'announcements'));
     }
 }
