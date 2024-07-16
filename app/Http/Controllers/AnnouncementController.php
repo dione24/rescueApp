@@ -7,6 +7,7 @@ use App\Models\Polygon;
 use App\Models\Announcement;
 use Illuminate\Http\Request;
 use InvalidArgumentException;
+use App\Jobs\SendAcceptanceEmail;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use App\Jobs\SendNewAnnouncementEmailJob;
@@ -101,17 +102,15 @@ class AnnouncementController extends Controller
 
         return $inside;
     }
-
     public function accept($id)
     {
         $announcement = Announcement::findOrFail($id);
         $announcement->status = 'accepted';
         $announcement->save();
-
-        //send email to user
-
+        SendAcceptanceEmail::dispatch($announcement);
         return redirect()->back()->with('success', 'Annonce acceptée avec succès.');
     }
+
     public function destroy($id)
     {
         $announcement = Announcement::findOrFail($id);
