@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Comment;
 use App\Models\Polygon;
 use App\Models\Announcement;
 use Illuminate\Http\Request;
@@ -25,9 +26,6 @@ class AnnouncementController extends Controller
     {
         return view('client.add');
     }
-
-
-
     public function storeAnnouncement(Request $request)
     {
         $request->validate([
@@ -117,5 +115,39 @@ class AnnouncementController extends Controller
         $announcement->delete();
 
         return redirect()->back()->with('success', 'Annonce supprimée avec succès.');
+    }
+
+    public function show($id)
+    {
+        $announcement = Announcement::findOrFail($id);
+        return view('rescuer.show', compact('announcement'));
+    }
+
+    public function showClient($id)
+    {
+        $announcement = Announcement::findOrFail($id);
+        return view('client.show', compact('announcement'));
+    }
+
+
+    public function storeComment(Request $request, $id)
+    {
+        $announcement = Announcement::findOrFail($id);
+
+        $comment = new Comment;
+        $comment->content = $request->input('content');
+        $comment->announcement_id = $announcement->id;
+        $comment->user_id = auth()->user()->id;
+        $comment->save();
+
+        return redirect()->route('rescuer.home')->with('success', 'Commentaire ajouté avec succès.');
+    }
+
+    public function close($id)
+    {
+        $announcement = Announcement::findOrFail($id);
+        $announcement->status = 'closed';
+        $announcement->save();
+        return redirect()->back()->with('success', 'Annonce fermée avec succès.');
     }
 }

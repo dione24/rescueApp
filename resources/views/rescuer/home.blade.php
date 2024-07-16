@@ -39,11 +39,18 @@
                             </td>
                             <td>{{ $announcement->created_at }}</td>
                             <td>
+                                @if($announcement->status != 'accepted')
                                 <form action="{{ route('rescuer.announcements.accept', $announcement->id) }}"
                                     method="POST">
                                     @csrf
-                                    <button type="submit" class="btn btn-success">J'accepte</button>
+                                    <button type="submit" class="btn btn-warning">Accpeter</button>
                                 </form>
+                                @else
+                                <a href="{{ route('rescuer.announcements.show', $announcement->id) }}"
+                                    class="btn btn-primary">
+                                    Consulter
+                                </a>
+                                @endif
                             </td>
                         </tr>
                         @endforeach

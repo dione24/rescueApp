@@ -63,11 +63,12 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('announcements.create') }}">Nouvelle alerte</a>
                         </li>
+
                         <li class="nav-item">
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button type="submit" class="btn btn-link nav-link">
-                                    Déconnexion
+                                    {{ Auth::user()->name }} | Déconnexion
                                 </button>
                             </form>
                         </li>

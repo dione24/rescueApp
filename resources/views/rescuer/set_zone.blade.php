@@ -32,11 +32,11 @@
             @csrf
             <input type="hidden" id="zone_coordinates" name="zone_coordinates">
             <div class="form-group">
-                <label for="zone_name">Nom de la Zone de Couverture</label>
+                <label for="zone_name">Nom de la Zone</label>
                 <input type="text" class="form-control" id="zone_name" name="name" required>
             </div>
             <div class="text-center">
-                <button type="submit" class="btn btn-primary">Enregistrer la Zone</button>
+                <button type="submit" class="btn btn-primary">Enregistrer</button>
             </div>
         </form>
 
