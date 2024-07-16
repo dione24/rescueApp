@@ -18,4 +18,9 @@ class Announcement extends Model
     {
         return $this->hasMany(Comment::class);
     }
+
+    public function rescuer()
+    {
+        return $this->belongsTo(User::class, 'rescuer_id');
+    }
 }

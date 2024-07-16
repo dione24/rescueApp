@@ -91,6 +91,9 @@
                                         Status
                                     </th>
                                     <th>
+                                        Secouristes
+                                    </th>
+                                    <th>
                                         Action
                                     </th>
 
@@ -111,8 +114,8 @@
                                     <td>
                                         {{$announcement->description}}
                                     </td>
-                                    <td>
 
+                                    <td>
                                         @if($announcement->status == 'accepted')
                                         <span class="badge bg-success">Acceptée</span>
                                         @elseif($announcement->status == 'pending')
@@ -120,6 +123,10 @@
                                         @else
                                         <span class="badge bg-danger">Nouveau</span>
                                         @endif
+                                    </td>
+
+                                    <td>
+                                        {{ $announcement->rescuer->name }}
                                     </td>
                                     <td>
                                         <form action="{{route('announcements.destroy',$announcement->id)}}"

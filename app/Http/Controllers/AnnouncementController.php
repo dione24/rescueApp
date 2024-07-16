@@ -104,6 +104,7 @@ class AnnouncementController extends Controller
     {
         $announcement = Announcement::findOrFail($id);
         $announcement->status = 'accepted';
+        $announcement->rescuer_id = auth()->id();
         $announcement->save();
         SendAcceptanceEmail::dispatch($announcement);
         return redirect()->back()->with('success', 'Annonce acceptée avec succès.');

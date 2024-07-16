@@ -14,17 +14,18 @@ class CoverageZoneController extends Controller
 {
     public function index()
     {
-        $announcements = Announcement::all();
+        $annoncesUsers = Announcement::where('rescuer_id', Auth::user()->id)->get();
+        // $zonesAnnounces = Announcement::where('status', 'pending
         $zonesAnnounces = $this->getAnnouncementsInPolygon(Auth::user());
         $zones = Polygon::where('user_id', Auth::user()->id)->get();
         // dd($zonesAnnounces);
-        return view('rescuer.home', compact('zonesAnnounces', 'zones', 'announcements'));
+        return view('rescuer.home', compact('zonesAnnounces', 'zones', 'annoncesUsers'));
     }
 
     private function getAnnouncementsInPolygon($user)
     {
         $polygons = Polygon::where('user_id', $user->id)->get();
-        $announcements = Announcement::all();
+        $announcements = Announcement::where('status', 'pending')->get();
 
         $announcementsInPolygon = $announcements->filter(function ($announcement) use ($polygons) {
             $announcementPoint = ['longitude' => $announcement->longitude, 'latitude' => $announcement->latitude];

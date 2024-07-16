@@ -2,8 +2,13 @@
 
 @section('content')
 <div class="container my-5 p-3 bg-light rounded shadow-sm">
+    <a href="{{ route('announcements.create') }}" class="btn btn-danger">
+        Nouvelle Alerte
+    </a>
+    <br><br>
     <div class="border-bottom pb-2 mb-3">
         <h4>Mes Alertes</h4>
+
     </div>
 
     <div class="d-flex flex-wrap">
